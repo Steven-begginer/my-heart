@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的真心</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pink: #ff6b9d;
+            --light-pink: #ffb6d3;
+            --baby-pink: #ffd6e7;
+            --rose: #ff4081;
+            --blush: #ff80ab;
+            --sakura: #ffacc7;
+            --deep-pink: #e91e8a;
+            --soft-white: #fff0f5;
+            --dark-rose: #8b3a62;
+            --dark-pink-bg: #fff0f5;
+        }
+
+        body {
+            overflow-x: hidden;
+            background: #fff5f9;
+            font-family: 'ZCOOL XiaoWei', serif;
+            cursor: default;
+        }
+
+        /* ========== 开场页 ========== */
+        #landing {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, #3d1028 0%, #1a0a14 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+
+        #landing.hide {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        #landing h1 {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 4rem;
+            color: var(--rose);
+            text-shadow: 0 0 40px rgba(255,107,157,0.3);
+            animation: breathe 3s ease-in-out infinite;
+            margin-bottom: 2rem;
+        }
+
+        #landing .subtitle {
+            color: #c4738e;
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            margin-bottom: 3rem;
+            animation: fadeInUp 2s ease 0.5s both;
+        }
+
+        #landing .enter-btn {
+            padding: 14px 48px;
+            border: 2px solid var(--pink);
+            background: transparent;
+            color: var(--pink);
+            font-size: 1.2rem;
+            font-family: 'ZCOOL XiaoWei', serif;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            animation: fadeInUp 2s ease 1s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #landing .enter-btn:hover {
+            background: var(--pink);
+            color: white;
+            box-shadow: 0 0 30px rgba(255,107,157,0.5);
+            transform: scale(1.05);
+        }
+
+        /* ========== 主内容 ========== */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        #main-content.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 粒子画布 */
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ========== 各个章节 ========== */
+        .section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            z-index: 1;
+        }
+
+        /* 第一章：像风一样 */
+        .section-wind {
+            background: linear-gradient(180deg, #fff0f5 0%, #ffe4ef 50%, #ffd6e7 100%);
+        }
+
+        .wind-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 5rem;
+            color: transparent;
+            background: linear-gradient(135deg, var(--rose), var(--pink), var(--baby-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .wind-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .wind-text {
+            max-width: 600px;
+            color: #6b3a5a;
+            font-size: 1.25rem;
+            line-height: 2.2;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease 0.3s;
+        }
+
+        .wind-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 第二章：她的样子 */
+        .section-her {
+            background: linear-gradient(180deg, #ffd6e7 0%, #ffcadd 50%, #ffd6e7 100%);
+        }
+
+        .trait-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+            max-width: 900px;
+            margin-top: 2rem;
+        }
+
+        .trait-card {
+            width: 180px;
+            height: 220px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+            transform: translateY(40px) scale(0.9);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trait-card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .trait-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            background: inherit;
+            filter: blur(0);
+            transition: filter 0.3s;
+        }
+
+        .trait-card:hover {
+            transform: translateY(-10px) scale(1.05) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .trait-card .emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .trait-card .trait-label {
+            font-size: 1.1rem;
+            color: white;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .trait-card .trait-desc {
+            font-size: 0.85rem;
+            color: rgba(255,220,235,0.8);
+            margin-top: 8px;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .card-happy { background: linear-gradient(135deg, #ff6b9d 0%, #ffb6d3 100%); }
+        .card-cute { background: linear-gradient(135deg, #ff80ab 0%, #ffd6e7 100%); }
+        .card-free { background: linear-gradient(135deg, #f48fb1 0%, #ffacc7 100%); }
+        .card-brave { background: linear-gradient(135deg, #ff4081 0%, #ff80ab 100%); }
+        .card-unique { background: linear-gradient(135deg, #e91e8a 0%, #ff6b9d 100%); }
+        .card-abstract { background: linear-gradient(135deg, #d81b60 0%, #f48fb1 100%); }
+
+        /* 第三章：在我眼中 */
+        .section-eyes {
+            background: linear-gradient(180deg, #ffe4ef 0%, #ffd6e7 50%, #ffcadd 100%);
+        }
+
+        .eyes-content {
+            max-width: 700px;
+            text-align: center;
+        }
+
+        .eyes-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 3.5rem;
+            color: var(--rose);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .eyes-title.visible { opacity: 1; transform: translateY(0); }
+
+        .poem-lines {
+            list-style: none;
+            padding: 0;
+        }
+
+        .poem-lines li {
+            color: #6b3a5a;
+            font-size: 1.4rem;
+            line-height: 2.5;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.8s ease;
+        }
+
+        .poem-lines li.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .poem-lines li .highlight {
+            color: var(--pink);
+            font-weight: bold;
+        }
+
+        /* 第四章：分离 */
+        .section-apart {
+            background: linear-gradient(180deg, #ffcadd 0%, #ffd6e7 50%, #ffe4ef 100%);
+        }
+
+        .apart-content {
+            max-width: 650px;
+            text-align: center;
+        }
+
+        .apart-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 3.5rem;
+            color: var(--rose);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transition: all 1s ease;
+        }
+
+        .apart-title.visible { opacity: 1; }
+
+        .apart-text {
+            color: #6b3a5a;
+            font-size: 1.3rem;
+            line-height: 2.4;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease 0.3s;
+        }
+
+        .apart-text.visible { opacity: 1; transform: translateY(0); }
+
+        .countdown-box {
+            margin-top: 2.5rem;
+            padding: 30px 50px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,107,157,0.3);
+            display: inline-block;
+            opacity: 0;
+            transition: all 1s ease 0.6s;
+        }
+
+        .countdown-box.visible { opacity: 1; }
+
+        .countdown-label {
+            color: #c4738e;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .countdown-number {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 3rem;
+            color: var(--pink);
+            text-shadow: 0 0 20px rgba(255,107,157,0.4);
+        }
+
+        /* 第五章：告白 */
+        .section-confess {
+            background: radial-gradient(ellipse at center, #ffe4ef 0%, #fff0f5 100%);
+            min-height: 120vh;
+        }
+
+        .confess-content {
+            max-width: 700px;
+            text-align: center;
+        }
+
+        .confess-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transition: all 1s ease;
+        }
+
+        .confess-title.visible {
+            opacity: 1;
+            background: linear-gradient(135deg, var(--rose), var(--pink), var(--baby-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .confess-letter {
+            color: #5a2d4a;
+            font-size: 1.25rem;
+            line-height: 2.4;
+            text-align: left;
+            padding: 40px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,107,157,0.25);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.2s ease 0.3s;
+        }
+
+        .confess-letter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .confess-letter .letter-highlight {
+            color: var(--pink);
+            font-size: 1.35rem;
+        }
+
+        .heart-final {
+            margin-top: 3rem;
+            font-size: 5rem;
+            animation: heartbeat 1.2s ease-in-out infinite;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 1s ease 0.8s;
+            user-select: none;
+        }
+
+        .heart-final.visible { opacity: 1; }
+
+        .heart-final:hover {
+            transform: scale(1.3);
+        }
+
+        .final-words {
+            margin-top: 1.5rem;
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 2rem;
+            color: var(--pink);
+            opacity: 0;
+            transition: all 1s ease 1s;
+        }
+
+        .final-words.visible { opacity: 1; }
+
+        /* ========== 飘落的花瓣 ========== */
+        .petal {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: var(--pink);
+            border-radius: 50% 0 50% 50%;
+            opacity: 0.6;
+            z-index: 2;
+            pointer-events: none;
+            animation: petalFall linear infinite;
+        }
+
+        /* ========== 浮动爱心 ========== */
+        .floating-heart {
+            position: fixed;
+            color: var(--pink);
+            pointer-events: none;
+            z-index: 999;
+            animation: floatUp 1.5s ease-out forwards;
+            font-size: 1.5rem;
+        }
+
+        /* ========== 章节标题装饰 ========== */
+        .section-number {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.2rem;
+            color: rgba(255,107,157,0.6);
+            letter-spacing: 6px;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transition: all 1s ease;
+        }
+
+        .section-number.visible { opacity: 1; }
+
+        /* ========== 音乐按钮 ========== */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,107,157,0.5);
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            color: var(--pink);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .music-btn:hover {
+            background: rgba(255,107,157,0.2);
+            transform: scale(1.1);
+        }
+
+        .music-btn.playing .music-icon {
+            animation: spin 2s linear infinite;
+        }
+
+        /* ========== 滚动进度条 ========== */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--deep-pink), var(--pink), var(--baby-pink), var(--pink), var(--deep-pink));
+            z-index: 100;
+            transition: width 0.1s linear;
+        }
+
+        /* ========== 动画关键帧 ========== */
+        @keyframes breathe {
+            0%, 100% { text-shadow: 0 0 30px rgba(255,107,157,0.3); }
+            50% { text-shadow: 0 0 60px rgba(255,107,157,0.5), 0 0 90px rgba(255,107,157,0.2); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.15); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.1); }
+            60% { transform: scale(1); }
+        }
+
+        @keyframes petalFall {
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0.7; }
+            25% { transform: translateY(25vh) rotate(90deg) translateX(30px); }
+            50% { transform: translateY(50vh) rotate(180deg) translateX(-20px); opacity: 0.5; }
+            75% { transform: translateY(75vh) rotate(270deg) translateX(25px); }
+            100% { transform: translateY(110vh) rotate(360deg) translateX(-10px); opacity: 0; }
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 768px) {
+            #landing h1 { font-size: 2.8rem; }
+            .wind-title { font-size: 3rem; }
+            .wind-text { font-size: 1.1rem; }
+            .trait-card { width: 140px; height: 180px; }
+            .trait-card .emoji { font-size: 2.2rem; }
+            .eyes-title, .apart-title { font-size: 2.5rem; }
+            .poem-lines li { font-size: 1.15rem; }
+            .confess-title { font-size: 2.8rem; }
+            .confess-letter { padding: 24px; font-size: 1.1rem; }
+            .apart-text { font-size: 1.1rem; }
+        }
+
+        /* ========== 打字机效果 ========== */
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--pink);
+            animation: typing 3s steps(20, end), blink 0.8s step-end infinite;
+            display: inline-block;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--pink); }
+        }
+
+        /* 星光 */
+        .star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: var(--baby-pink);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.5); box-shadow: 0 0 6px var(--baby-pink); }
+        }
+
+        /* ========== 开场页爱心 ========== */
+        .landing-heart-wrap {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1.5rem;
+            animation: heartFloat 3s ease-in-out infinite, fadeInUp 1.5s ease both;
+        }
+
+        .landing-heart-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 20px rgba(255,107,157,0.6));
+        }
+
+        .heart-path {
+            animation: heartPulse 1.5s ease-in-out infinite;
+            transform-origin: center center;
+        }
+
+        @keyframes heartFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes heartPulse {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.08); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.05); }
+            60% { transform: scale(1); }
+        }
+
+        /* 开场页浮动粉色光点 */
+        .landing-dots {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .landing-dot {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--pink);
+            opacity: 0;
+            animation: dotFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes dotFloat {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            20% { opacity: 0.4; }
+            80% { opacity: 0.2; }
+            100% { opacity: 0; transform: translateY(-20vh) scale(1); }
+        }
+
+        /* ========== 新章节：只有我知道的你 ========== */
+        .section-know {
+            background: linear-gradient(180deg, #ffd6e7 0%, #ffe4ef 50%, #ffd6e7 100%);
+        }
+
+        .know-intro {
+            color: #a0627e;
+            font-size: 1.1rem;
+            text-align: center;
+            max-width: 520px;
+            margin-bottom: 2.5rem;
+            line-height: 2;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease 0.2s;
+        }
+
+        .know-intro.visible { opacity: 1; transform: translateY(0); }
+
+        .know-text-block {
+            max-width: 660px;
+            color: #5a2d4a;
+            font-size: 1.2rem;
+            line-height: 2.4;
+            text-align: left;
+            padding: 36px 40px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.45);
+            border: 1px solid rgba(255,107,157,0.2);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.2s ease 0.3s;
+        }
+
+        .know-text-block.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .know-text-block { padding: 24px 20px; font-size: 1.05rem; }
+        }
+
+        /* ========== 新章节：她的坚强 ========== */
+        .section-strong {
+            background: linear-gradient(180deg, #ffcadd 0%, #ffd6e7 50%, #ffcadd 100%);
+        }
+
+        .strong-content {
+            max-width: 680px;
+            text-align: center;
+        }
+
+        .strong-title {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 3.5rem;
+            color: var(--rose);
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .strong-title.visible { opacity: 1; transform: translateY(0); }
+
+        .strong-subtitle {
+            color: #a0627e;
+            font-size: 1.05rem;
+            margin-bottom: 2.5rem;
+            line-height: 2;
+            opacity: 0;
+            transition: all 1s ease 0.2s;
+        }
+
+        .strong-subtitle.visible { opacity: 1; }
+
+        .strong-text-block {
+            max-width: 660px;
+            color: #5a2d4a;
+            font-size: 1.2rem;
+            line-height: 2.4;
+            text-align: left;
+            padding: 36px 40px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.45);
+            border: 1px solid rgba(255,107,157,0.2);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.2s ease 0.3s;
+        }
+
+        .strong-text-block.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .strong-title { font-size: 2.5rem; }
+            .strong-text-block { padding: 24px 20px; font-size: 1.05rem; }
+        }
+
+        /* ========== 蜡笔小新图片分隔 ========== */
+        .shinhan-divider {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 0;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1s ease;
+        }
+
+        .shinhan-divider.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .shinhan-divider img {
+            max-width: 280px;
+            max-height: 280px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(255,107,157,0.2);
+            transition: transform 0.4s ease;
+            object-fit: contain;
+        }
+
+        .shinhan-divider img:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        @media (max-width: 768px) {
+            .shinhan-divider img { max-width: 200px; max-height: 200px; }
+        }
+
+        /* ========== 蜡笔小新侧边装饰 ========== */
+        .section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shinhan-side {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            opacity: 0;
+            transition: all 1.2s ease 0.5s;
+            filter: drop-shadow(0 4px 15px rgba(255,107,157,0.2));
+            z-index: 2;
+            pointer-events: none;
+            border-radius: 12px;
+        }
+
+        .shinhan-side.visible {
+            opacity: 0.8;
+        }
+
+        .shinhan-side.left { left: 2%; }
+        .shinhan-side.right { right: 2%; }
+
+        .shinhan-side.visible {
+            animation: sideFloat 5s ease-in-out infinite;
+        }
+
+        .shinhan-side:nth-child(odd).visible {
+            animation: sideFloat 5s ease-in-out infinite;
+        }
+
+        .shinhan-side:nth-child(even).visible {
+            animation: sideFloat2 6s ease-in-out infinite;
+        }
+
+        @keyframes sideFloat {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        @keyframes sideFloat2 {
+            0%, 100% { transform: translateY(0) rotate(2deg); }
+            50% { transform: translateY(-12px) rotate(-2deg); }
+        }
+
+        @media (max-width: 1200px) {
+            .shinhan-side { width: 90px; height: 90px; }
+            .shinhan-side.left { left: 1%; }
+            .shinhan-side.right { right: 1%; }
+        }
+
+        @media (max-width: 768px) {
+            .shinhan-side { width: 55px; height: 55px; }
+            .shinhan-side.left { left: 2px; }
+            .shinhan-side.right { right: 2px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 滚动进度条 -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- 音乐按钮 -->
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="播放/暂停 像风一样">
+        <span class="music-icon" id="musicIcon">🎵</span>
+    </button>
+
+    <!-- 开场页 -->
+    <div id="landing">
+        <!-- 粉色爱心动画 -->
+        <div class="landing-heart-wrap">
+            <svg viewBox="0 0 200 200" class="landing-heart-svg">
+                <defs>
+                    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ff4081"/>
+                        <stop offset="50%" style="stop-color:#ff6b9d"/>
+                        <stop offset="100%" style="stop-color:#ffb6d3"/>
+                    </linearGradient>
+                    <filter id="heartGlow">
+                        <feGaussianBlur stdDeviation="4" result="glow"/>
+                        <feMerge>
+                            <feMergeNode in="glow"/>
+                            <feMergeNode in="glow"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                <path d="M100 180 C60 140, 10 120, 10 80 C10 40, 50 20, 100 60 C150 20, 190 40, 190 80 C190 120, 140 140, 100 180Z" 
+                      fill="url(#heartGrad)" filter="url(#heartGlow)" class="heart-path"/>
+            </svg>
+        </div>
+        <h1>我的真心</h1>
+        <p class="subtitle">有些话，一直没有说出口</p>
+        <button class="enter-btn" onclick="enterSite()">打 开</button>
+        <!-- 开场页浮动粉色圆点 -->
+        <div class="landing-dots"></div>
+    </div>
+
+    <!-- 主内容 -->
+    <div id="main-content">
+
+        <!-- 第一页：给你的礼物 -->
+        <section class="section" style="background: linear-gradient(180deg, #fff0f5 0%, #ffd6e7 100%);">
+            <p class="wind-text" data-animate style="max-width:600px; font-size:1.3rem; color:#6b3a5a; line-height:2.4; text-align:center;">
+                这是我给你做的网页，也是我算是我走之前给你的一个礼物吧！！！
+            </p>
+        </section>
+
+        <!-- 第二章：她的样子 -->
+        <section class="section section-her" id="sec-her">
+            <img src="images/shin1.webp" class="shinhan-side left" data-animate style="top:15%">
+            <img src="images/shin2.jpeg" class="shinhan-side right" data-animate style="top:10%">
+            <img src="images/shin3.webp" class="shinhan-side left" data-animate style="top:55%">
+            <img src="images/shin4.jpg" class="shinhan-side right" data-animate style="top:50%">
+            <img src="images/shin5.webp" class="shinhan-side left" data-animate style="top:85%">
+            <img src="images/shin6.webp" class="shinhan-side right" data-animate style="top:82%">
+            <div class="section-number" data-animate>贰</div>
+            <h2 class="wind-title" data-animate>她的千万种样子</h2>
+            <div class="know-text-block" data-animate style="max-width:700px;">
+                <p>我有一个喜欢的女孩，喜欢了很久的女孩，她"像风一样"让人琢磨不透，她有时很开心，有时很可爱，有时情绪低落，有时也很抽象，她会在遇到难题的时候勇敢的逃避，她会在别人离开她的时候选择放弃，这个世界的pua和她无关，她就是这个世界的奇女子，一个那么特别，那么自由的灵魂！在有些人眼中，可能别人会觉得她不守规矩，神经大条，一惊一乍，可在我的世界里，她就像是那么的可爱，自由和美好的女孩儿，可是这些话我真的说不出口，我想她是知道的，因为我们是很熟悉的朋友！可是，过了25号，我们就又要分开了，可我不想分开了，我的内心告诉我，如果这次还不告诉她，我会后悔的。</p>
+            </div>
+        </section>
+
+        <!-- 章节：我知道的你 -->
+        <section class="section section-know" id="sec-know">
+            <img src="images/shin4.jpg" class="shinhan-side left" data-animate style="top:12%">
+            <img src="images/shin1.webp" class="shinhan-side right" data-animate style="top:8%">
+            <img src="images/shin6.webp" class="shinhan-side left" data-animate style="top:50%">
+            <img src="images/shin3.webp" class="shinhan-side right" data-animate style="top:48%">
+            <img src="images/shin2.jpeg" class="shinhan-side left" data-animate style="top:85%">
+            <img src="images/shin5.webp" class="shinhan-side right" data-animate style="top:80%">
+            <div class="section-number" data-animate>♡</div>
+            <h2 class="wind-title" data-animate>我知道的你</h2>
+            <p class="know-intro" data-animate>那些小小的喜好，那些细微的习惯<br>我都记得，一样也没忘</p>
+            <div class="know-text-block" data-animate>
+                <p>她喜欢的动漫是蜡笔小新，喜欢的韩国女团是k-pop（aespa 和 IU)，她的例假是每个月的18，19号左右，她笑起来像拉布布，她长的像大头娃娃，她是我的高中唯一的女性同桌，她知道我的过往情史，她喜欢爱林英语的英语课，她喜欢喝酒，她喜欢的水果是草莓，她也喜欢艺术，她喜欢打麻将，她喜欢护肤，她喜欢赚钱，她的星座是天秤座，她也爱睡觉，她数学很差，她喜欢文学，她很漂亮，特别是那个大眼睛，她喜欢的颜色是粉色，她在我心里是个出色的服装代言人，她艺术审美很好。</p>
+            </div>
+        </section>
+
+        <!-- 第三章：在我眼中 -->
+        <section class="section section-eyes" id="sec-eyes">
+            <img src="images/shin2.jpeg" class="shinhan-side left" data-animate style="top:10%">
+            <img src="images/shin5.webp" class="shinhan-side right" data-animate style="top:12%">
+            <img src="images/shin1.webp" class="shinhan-side left" data-animate style="top:50%">
+            <img src="images/shin4.jpg" class="shinhan-side right" data-animate style="top:55%">
+            <img src="images/shin6.webp" class="shinhan-side left" data-animate style="top:85%">
+            <img src="images/shin3.webp" class="shinhan-side right" data-animate style="top:83%">
+            <div class="eyes-content">
+                <div class="section-number" data-animate>叁</div>
+                <h2 class="eyes-title" data-animate>在我眼中</h2>
+                <ul class="poem-lines">
+                    <li data-animate>别人觉得你不守规矩，</li>
+                    <li data-animate>我觉得你是 <span class="highlight">自由</span></li>
+                    <li data-animate>别人觉得你神经大条，</li>
+                    <li data-animate>我觉得你是 <span class="highlight">豁达</span></li>
+                    <li data-animate>别人觉得你一惊一乍，</li>
+                    <li data-animate>我觉得你是 <span class="highlight">可爱</span></li>
+                    <li data-animate>在我的世界里，</li>
+                    <li data-animate>你就是那么 <span class="highlight">美好</span> 的女孩儿</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 新章节：你不知道的心疼 -->
+        <section class="section section-strong" id="sec-strong">
+            <img src="images/shin3.webp" class="shinhan-side left" data-animate style="top:10%">
+            <img src="images/shin6.webp" class="shinhan-side right" data-animate style="top:15%">
+            <img src="images/shin5.webp" class="shinhan-side left" data-animate style="top:52%">
+            <img src="images/shin2.jpeg" class="shinhan-side right" data-animate style="top:48%">
+            <img src="images/shin4.jpg" class="shinhan-side left" data-animate style="top:85%">
+            <img src="images/shin1.webp" class="shinhan-side right" data-animate style="top:82%">
+            <div class="strong-content">
+                <div class="section-number" data-animate>✦</div>
+                <h2 class="strong-title" data-animate>你不知道的心疼</h2>
+                <p class="strong-subtitle" data-animate>你总说自己是个"混子"<br>可我清楚你有多不容易</p>
+                <div class="strong-text-block" data-animate>
+                    <p>她有时候也很坚强，在韩国发高烧的时候自己一个人在屋里硬抗，当时我想买机票飞过去可是我不能，她不回电话的时候我以为她晕过去了，我很担心！她一个人在韩国既要打工又要读书很辛苦，虽然说她是混子，但其实我清楚她的不容易，她胃痛着也坚持读书，考试，工作，她压力大的时候喜欢打游戏解压，她经常打工到半夜才回家。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第四章：25号 -->
+        <section class="section section-apart" id="sec-apart">
+            <img src="images/shin5.webp" class="shinhan-side left" data-animate style="top:12%">
+            <img src="images/shin3.webp" class="shinhan-side right" data-animate style="top:10%">
+            <img src="images/shin1.webp" class="shinhan-side left" data-animate style="top:55%">
+            <img src="images/shin6.webp" class="shinhan-side right" data-animate style="top:50%">
+            <img src="images/shin2.jpeg" class="shinhan-side left" data-animate style="top:85%">
+            <img src="images/shin4.jpg" class="shinhan-side right" data-animate style="top:85%">
+            <div class="apart-content">
+                <div class="section-number" data-animate>肆</div>
+                <h2 class="apart-title" data-animate>过了25号…</h2>
+                <p class="apart-text" data-animate>
+                    我们就又要分开了<br>
+                    可是这一次，我不想再沉默<br>
+                    内心告诉我——<br>
+                    如果这次还不告诉你，我会后悔的<br>
+                    所以这一次，我不想留下遗憾
+                </p>
+                <div class="countdown-box" data-animate>
+                    <div class="countdown-label">距离 2月25日</div>
+                    <div class="countdown-number" id="countdown">计算中...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第五章：告白 -->
+        <section class="section section-confess" id="sec-confess">
+            <img src="images/shin6.webp" class="shinhan-side left" data-animate style="top:5%">
+            <img src="images/shin4.jpg" class="shinhan-side right" data-animate style="top:8%">
+            <img src="images/shin3.webp" class="shinhan-side left" data-animate style="top:30%">
+            <img src="images/shin1.webp" class="shinhan-side right" data-animate style="top:28%">
+            <img src="images/shin2.jpeg" class="shinhan-side left" data-animate style="top:55%">
+            <img src="images/shin5.webp" class="shinhan-side right" data-animate style="top:53%">
+            <img src="images/shin4.jpg" class="shinhan-side left" data-animate style="top:78%">
+            <img src="images/shin6.webp" class="shinhan-side right" data-animate style="top:80%">
+            <div class="confess-content">
+                <div class="section-number" data-animate>伍</div>
+                <h2 class="confess-title" data-animate>这是我的真心</h2>
+                <div class="confess-letter" data-animate>
+                    <p>嘿，</p>
+                    <br>
+                    <p>这些话我一直说不出口，但我知道，你大概是知道的，因为我们是那么熟悉的朋友。</p>
+                    <br>
+                    <p>可是"朋友"这两个字，我已经不想再说了。</p>
+                    <br>
+                    <p>我喜欢你开心时的笑容，喜欢你可爱时的样子，喜欢你低落时也愿意在我面前展现脆弱的信任。</p>
+                    <br>
+                    <p>我喜欢你遇到难题时"勇敢地逃避"，喜欢你那些让人捉摸不透的瞬间——</p>
+                    <br>
+                    <p>因为那都是你，<span class="letter-highlight">真实的你</span>。</p>
+                    <br>
+                    <p>这个世界的PUA和你无关，你就是你，一个<span class="letter-highlight">那么特别、那么自由的灵魂</span>。</p>
+                    <br>
+                    <p>而我，只是一个被这样的你深深吸引的人。</p>
+                    <br>
+
+                    <p class="letter-highlight" style="font-size:1.45rem; text-align: center;">我喜欢你，喜欢了很久很久。</p>
+                    <br>
+                    <p style="text-align: right; color: #c4738e;">—— 你知道的那个人</p>
+                </div>
+                <p class="final-words" data-animate>我不求你的肯定回应，我只是表达我对你的喜欢！这样我就没有遗憾了！</p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- 背景音乐：薛之谦 - 像风一样 -->
+    <audio id="bgMusic" loop>
+        <source src="像风一样.mp3" type="audio/mpeg">
+        <source src="像风一样.flac" type="audio/flac">
+        <source src="像风一样.wav" type="audio/wav">
+    </audio>
+
+    <script>
+        // ========== 进入动画 ==========
+        function enterSite() {
+            const landing = document.getElementById('landing');
+            const main = document.getElementById('main-content');
+            landing.classList.add('hide');
+            
+            setTimeout(() => {
+                main.classList.add('show');
+                landing.style.display = 'none';
+                createStars();
+                createPetals();
+                startCountdown();
+                // 自动播放音乐
+                playMusic();
+            }, 800);
+        }
+
+        // ========== 音乐控制 ==========
+        function playMusic() {
+            const music = document.getElementById('bgMusic');
+            const btn = document.getElementById('musicBtn');
+            music.volume = 0.5;
+            music.play().then(() => {
+                btn.classList.add('playing');
+            }).catch(() => {
+                // 浏览器可能阻止自动播放，用户可点击按钮手动播放
+            });
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            const btn = document.getElementById('musicBtn');
+            if (music.paused) {
+                music.play();
+                btn.classList.add('playing');
+            } else {
+                music.pause();
+                btn.classList.remove('playing');
+            }
+        }
+
+        // ========== 开场页浮动光点 ==========
+        (function createLandingDots() {
+            const container = document.querySelector('.landing-dots');
+            if (!container) return;
+            const pinkShades = ['#ff6b9d', '#ffb6d3', '#ff80ab', '#ffd6e7', '#ff4081', '#ffacc7'];
+            for (let i = 0; i < 30; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'landing-dot';
+                const size = Math.random() * 6 + 3;
+                dot.style.width = size + 'px';
+                dot.style.height = size + 'px';
+                dot.style.left = Math.random() * 100 + '%';
+                dot.style.animationDelay = Math.random() * 6 + 's';
+                dot.style.animationDuration = (Math.random() * 4 + 5) + 's';
+                dot.style.background = pinkShades[Math.floor(Math.random() * pinkShades.length)];
+                dot.style.boxShadow = `0 0 ${size + 4}px ${dot.style.background}`;
+                container.appendChild(dot);
+            }
+        })();
+
+        // ========== 星空背景（粉色星星）==========
+        function createStars() {
+            const pinkStars = ['#ffb6d3', '#ffd6e7', '#ff80ab', '#ffacc7', '#fff0f5', '#ff6b9d'];
+            for (let i = 0; i < 80; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.background = pinkStars[Math.floor(Math.random() * pinkStars.length)];
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(star);
+            }
+        }
+
+        // ========== 飘落花瓣 ==========
+        function createPetals() {
+            setInterval(() => {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.animationDuration = (Math.random() * 5 + 6) + 's';
+                petal.style.width = (Math.random() * 8 + 8) + 'px';
+                petal.style.height = petal.style.width;
+                petal.style.opacity = Math.random() * 0.4 + 0.2;
+                
+                const colors = ['#ff6b9d', '#ffb6d3', '#ff80ab', '#ffd6e7', '#f48fb1', '#ff4081', '#ffacc7', '#e91e8a'];
+                petal.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                document.body.appendChild(petal);
+                
+                setTimeout(() => petal.remove(), 11000);
+            }, 800);
+        }
+
+        // ========== 倒计时 ==========
+        function startCountdown() {
+            function update() {
+                const now = new Date();
+                const target = new Date(now.getFullYear(), 1, 25); // 2月25日
+                if (now > target) target.setFullYear(target.getFullYear() + 1);
+                
+                const diff = target - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                
+                document.getElementById('countdown').textContent = 
+                    `${days}天 ${hours}小时 ${minutes}分钟`;
+            }
+            update();
+            setInterval(update, 60000);
+        }
+
+        // ========== 滚动动画 ==========
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    // 给每个元素加一个延迟
+                    const siblings = entry.target.parentElement.querySelectorAll('[data-animate]');
+                    const idx = Array.from(siblings).indexOf(entry.target);
+                    
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, idx * 200);
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+
+        // ========== 滚动进度条 ==========
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            document.getElementById('scrollProgress').style.width = progress + '%';
+        });
+
+        // ========== 点击爱心 - 爆炸效果 ==========
+        function burstHearts(e) {
+            const hearts = ['💗', '💕', '💖', '💓', '💝', '🌸', '🌺', '🦩'];
+            for (let i = 0; i < 12; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = (e.clientX + (Math.random() - 0.5) * 100) + 'px';
+                heart.style.top = (e.clientY + (Math.random() - 0.5) * 60) + 'px';
+                heart.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+                heart.style.animationDuration = (Math.random() * 1 + 1) + 's';
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 2000);
+            }
+        }
+
+        // ========== 鼠标移动时生成微光跟随 ==========
+        let throttle = false;
+        document.addEventListener('mousemove', (e) => {
+            if (throttle) return;
+            throttle = true;
+            setTimeout(() => throttle = false, 80);
+
+            if (document.getElementById('landing').style.display === 'none') {
+                const sparkle = document.createElement('div');
+                sparkle.style.cssText = `
+                    position: fixed;
+                    left: ${e.clientX}px;
+                    top: ${e.clientY}px;
+                    width: 4px;
+                    height: 4px;
+                    background: var(--pink);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 999;
+                    opacity: 0.6;
+                    box-shadow: 0 0 6px var(--pink);
+                    transition: all 0.8s ease;
+                `;
+                document.body.appendChild(sparkle);
+                requestAnimationFrame(() => {
+                    sparkle.style.opacity = '0';
+                    sparkle.style.transform = 'scale(0) translateY(-20px)';
+                });
+                setTimeout(() => sparkle.remove(), 800);
+            }
+        });
+
+        // ========== 页面加载完成后的处理 ==========
+        window.addEventListener('load', () => {
+            // 预加载字体后移除闪烁
+            document.body.style.visibility = 'visible';
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+.venv/
+ncm_convert.py
+*.ncm
+__pycache__/
+
+# 根目录多余的图片
+273b8204dea447cdbede4688e32180d3.webp
+O1CN01EoKljl1Tu1pZgZROa_!!4178932441.jpg_500x500q90
+images.jpeg
+o0fei4eABAEEAlAvmlDdEPIzxEAZN47WcFDBD7~tplv-dy-aweme-images-v2_3000_3000_q75.webp
+oMEAIDWfLKXEf8A9ptInWAFSQAvDbAgAAlnkgC~tplv-dy-aweme-images_q75.webp
+osSR9IEeoIeAAAE6EE6FEHgEQ4DAvBA7owfhFq~tplv-dy-aweme-images_q75.webp
