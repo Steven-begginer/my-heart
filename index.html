@@ -329,32 +329,6 @@
 
         .apart-text.visible { opacity: 1; transform: translateY(0); }
 
-        .countdown-box {
-            margin-top: 2.5rem;
-            padding: 30px 50px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.5);
-            border: 1px solid rgba(255,107,157,0.3);
-            display: inline-block;
-            opacity: 0;
-            transition: all 1s ease 0.6s;
-        }
-
-        .countdown-box.visible { opacity: 1; }
-
-        .countdown-label {
-            color: #c4738e;
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-        }
-
-        .countdown-number {
-            font-family: 'Ma Shan Zheng', cursive;
-            font-size: 3rem;
-            color: var(--pink);
-            text-shadow: 0 0 20px rgba(255,107,157,0.4);
-        }
-
         /* 第五章：告白 */
         .section-confess {
             background: radial-gradient(ellipse at center, #ffe4ef 0%, #fff0f5 100%);
@@ -1003,10 +977,7 @@
                     如果这次还不告诉你，我会后悔的<br>
                     所以这一次，我不想留下遗憾
                 </p>
-                <div class="countdown-box" data-animate>
-                    <div class="countdown-label">距离 2月25日</div>
-                    <div class="countdown-number" id="countdown">计算中...</div>
-                </div>
+
             </div>
         </section>
 
@@ -1070,7 +1041,7 @@
                 landing.style.display = 'none';
                 createStars();
                 createPetals();
-                startCountdown();
+
                 // 自动播放音乐
                 playMusic();
             }, 800);
@@ -1158,24 +1129,7 @@
             }, 800);
         }
 
-        // ========== 倒计时 ==========
-        function startCountdown() {
-            function update() {
-                const now = new Date();
-                const target = new Date(now.getFullYear(), 1, 25); // 2月25日
-                if (now > target) target.setFullYear(target.getFullYear() + 1);
-                
-                const diff = target - now;
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                
-                document.getElementById('countdown').textContent = 
-                    `${days}天 ${hours}小时 ${minutes}分钟`;
-            }
-            update();
-            setInterval(update, 60000);
-        }
+
 
         // ========== 滚动动画 ==========
         const observer = new IntersectionObserver((entries) => {
